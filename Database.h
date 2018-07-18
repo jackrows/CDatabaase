@@ -1,25 +1,28 @@
+/****************************************
+***		Header file of Database		*****
+*****************************************/
 #ifndef __Database_H__
 #define __Database_H__
 
+#include "DBTables.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 /*Definition of Database structure*/
 typedef struct Database{
-	char **table;		/*2 dimencial table of Database*/
+	char*	dbName;		/*Store the name of the database*/
+	p_Table tables;		/*a array of Tables in Database*/
 }Database;
 
 typedef Database* p_Database;	/*pointer of Database structure*/
+//int		stringSize = 15;		/*variable that allocate space for strings in table*/
 
 /*Declaration of functions about Database*/
-p_Database 	DatabaseTableCreation();							/*Create a table in Database*/
-int			DatabaseInsertRec(p_Database);						/*Insert a line in the table*/
-int			DatabaseRemoveRec(p_Database);						/*Remove a line from the table*/
-int			DatabaseSearchRec(Database);						/*Search for a record in the table*/
-char*		DatabaseSelectColumnByName(Database, char*)			/*Select a single column values by column name*/
-char* 		DatabaseSelectColumnByNo(Database, int);			/*Select a signle column values by column number sequence(zero-based)*/
-Database	DatabaseSelectMultiColsByNames(Database, char*);	/*Select a subtable values by columns names*/
-char*		DatabaseSelectRec(Database, char*);					/*Select a line from the table*/
+p_Database 	DatabaseCreation(char*, int);								/*Create a table in Database*/
+int			DatabaseAddTable(p_Database, Table);						/*Insert a table in the Database*/
+int			DatabaseRemoveTable(p_Database, Table);						/*Remove a table from the Database*/
+int			DatabaseSearchTable(Database, Table);						/*Search for a table by the name in the Database*/
+int			DatabaseDestruction(p_Database);							/*Destroy and free the memory of Database*/
 
 #endif
