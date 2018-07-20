@@ -6,6 +6,7 @@
 
 #include "DBTables.h"
 #define	NAMES_LENGTH 20
+
 /*Definition of Database structure*/
 typedef struct Database{
 	char*	dbName;		/*Store the name of the database*/
@@ -13,7 +14,6 @@ typedef struct Database{
 }Database;
 
 typedef Database* p_Database;	/*pointer of Database structure*/
-//int		stringSize = 15;		/*variable that allocate space for strings in table*/
 
 /*Declaration of functions about Database*/
 p_Database 	DatabaseCreation(char* const, int);							/*Create a table in Database*/
