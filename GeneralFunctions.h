@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 /*Declaration of General functions*/
-void	PrintOptionDatabase();			/*Display user options*/
+void	PrintOptionDatabase();			/*Display user actions on Database*/
+void	PrintOptionTable();		/*Display user actions on Table*/
 
 #endif

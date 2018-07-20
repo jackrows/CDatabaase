@@ -49,6 +49,11 @@ int main()
 			break;
 	}
 	
+	if(ret_scanf == 0)
+	{
+		printf("#The given input was invalid.\n");
+		//Unlaocate the used memory
+	}
 	database->tables[0]->tableValues[0][0] = "Alex";
 	printf("%s  %s\n", database->tables[0]->tableValues[0][0], database->tables[0]->tableValues[0][1]);
 	
