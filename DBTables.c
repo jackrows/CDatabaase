@@ -18,7 +18,9 @@ p_Table DBTableCreation(char* const name, int colSize)
 		table->tableValues[i] = malloc(sizeof(char*));
 		
 	/*Initialize the table with empty string and with specific name*/
+	table->tableName = malloc(sizeof(char) * NAMES_LENGTH);
 	table->tableName = name;
+	
 	for(i = 0; i < colSize; i++)
 		table->tableValues[0][i] = "";
 		

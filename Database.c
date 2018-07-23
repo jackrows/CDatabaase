@@ -17,7 +17,7 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	}
 	
 	/*Create database tables array*/
-	database->tables = malloc(sizeof(Table) * tablesNumber);
+	database->tables = malloc(sizeof(p_Table) * tablesNumber);
 	if(database->tables == NULL)
 	{
 		printf("#ERROR - in creation of Tables.\n");
@@ -25,11 +25,12 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	}
 	
 	/*Initialize database table with empty strings and assign the name*/
+	database->dbName = malloc(sizeof(char) * NAMES_LENGTH);
 	database->dbName = dbName;
 	
 	int i, colSize = 0;
 	char *tableName = malloc(sizeof(char) * NAMES_LENGTH);
-	if(tableName == NULL)
+	if(tableName == NULL || database->dbName == NULL)
 	{
 		printf("#ERROR - in allocated memory.\n");
 		return NULL;
@@ -47,4 +48,22 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	printf("#Initialization DONE\n");
 	
 	return database;
+}
+
+/*Display the name and the table array of Database*/
+void DatabasePrint(Database db)
+{
+	printf("\n-----------------------------------------\n");
+	printf("\tSchema Browser of %s\n", db.dbName);
+	printf("-----------------------------------------\n");
+	
+	p_Table pIndex = NULL;
+	int i;
+	for(i = 0; i < 3; i++)
+		printf(" - %s\n", db.tables[i]->tableName);
+	
+	for(pIndex = db.tables[0]; ; pIndex++)
+	{
+		printf(" - %s\n", pIndex->tableName);
+	}
 }

@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define	NAMES_LENGTH 20
+
 /*Definition of structure of table*/
 typedef struct Table {
 	char* 	tableName;			/*Store the name of the table*/

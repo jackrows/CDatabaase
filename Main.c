@@ -35,10 +35,16 @@ int main()
 			case 4:
 				break;
 			case 5:
+				DatabasePrint(*database);
+				PrintOptionDatabase();
 				break;
 			case 6:
+				PrintOptionTable();
+				PrintOptionDatabase();
 				break;
 			case 7:
+				break;
+			case 8:
 				printf("Exiting from the Database.\n");
 				break;
 			default:

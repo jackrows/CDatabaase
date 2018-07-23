@@ -9,6 +9,6 @@
 
 /*Declaration of General functions*/
 void	PrintOptionDatabase();			/*Display user actions on Database*/
-void	PrintOptionTable();		/*Display user actions on Table*/
+void	PrintOptionTable();				/*Display user actions on Table*/
 
 #endif

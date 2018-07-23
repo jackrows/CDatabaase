@@ -12,9 +12,10 @@ void PrintOptionDatabase()
 	printf(" 2 - Add Table in Database\n");
 	printf(" 3 - Remove Table from Database\n");
 	printf(" 4 - Search for a Table in Database\n");
-	printf(" 5 - Enter to a table\n");
-	printf(" 6 - Destroy Database\n");
-	printf(" 7 - Exit\n");
+	printf(" 5 - Print Database Schema\n");
+	printf(" 6 - Enter to a table\n");
+	printf(" 7 - Destroy Database\n");
+	printf(" 8 - Exit\n");
 	printf("\n");
 }
 
