@@ -29,8 +29,8 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	database->dbName = dbName;
 	
 	int i, colSize = 0;
-	char *tableName = malloc(sizeof(char) * NAMES_LENGTH);
-	if(tableName == NULL || database->dbName == NULL)
+	
+	if(database->dbName == NULL)
 	{
 		printf("#ERROR - in allocated memory.\n");
 		return NULL;
@@ -39,6 +39,8 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	/*Create each table and initialize them*/
 	for(i = 0; i < tablesNumber; i++)
 	{
+		char *tableName = malloc(sizeof(char) * NAMES_LENGTH);
+		//database->tables[i] = malloc(sizeof(Table));
 		printf("\tPlease give a name for the table...\n");
 		scanf("%s*s", tableName);
 		printf("\tPlease give the number of columns of the table...\n");
