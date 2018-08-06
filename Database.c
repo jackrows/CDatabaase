@@ -15,7 +15,7 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 		printf("#ERROR - in creation of Database.\n");
 		return NULL;
 	}
-	
+	database->tablesCount = tablesNumber;
 	/*Create database tables array*/
 	database->tables = malloc(sizeof(p_Table) * tablesNumber);
 	if(database->tables == NULL)
@@ -26,7 +26,8 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	
 	/*Initialize database table with empty strings and assign the name*/
 	database->dbName = malloc(sizeof(char) * NAMES_LENGTH);
-	database->dbName = dbName;
+	//database->dbName = dbName;
+	strcpy(database->dbName, dbName);
 	
 	int i, colSize = 0;
 	
@@ -47,9 +48,41 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 		scanf("%d*d", &colSize);
 		database->tables[i] = DBTableCreation(tableName, colSize);
 	}	
+	database->tables[tablesNumber + 1] = NULL;
 	printf("#Initialization DONE\n");
 	
 	return database;
+}
+
+/*Insert a table in already created Database.
+* Return 0 in success, 1 in error and -1 if database is null*/
+int	DatabaseAddTable(p_Database p_db)
+{
+	if(p_db == NULL)
+		return -1;
+	int 	columns = 0;
+	char* 	newTableName = malloc(sizeof(char) * NAMES_LENGTH);
+	printf("\tPlease give a name for the table...\n");
+	scanf("%s*s", newTableName);
+	printf("\tPlease give the number of columns of the table...\n");
+	scanf("%d*d", &columns);
+	p_Table newTable = DBTableCreation(newTableName, columns);
+	p_Table* tempTables = p_db->tables;
+
+	
+	if(tempTables == NULL)
+		return 1;
+	
+	free(p_db->tables);
+	p_db->tables = malloc(sizeof(p_Table) * p_db->tablesCount + 1);
+	int i;
+	for(i = 0; i < p_db->tablesCount; i++)
+	{
+		p_db->tables[i] = tempTables[i];
+	}
+	p_db->tablesCount++;
+	p_db->tables[p_db->tablesCount] = newTable;
+	return 0;
 }
 
 /*Display the name and the table array of Database*/
@@ -59,13 +92,8 @@ void DatabasePrint(Database db)
 	printf("\tSchema Browser of %s\n", db.dbName);
 	printf("-----------------------------------------\n");
 	
-	p_Table pIndex = NULL;
 	int i;
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < db.tablesCount; i++)
 		printf(" - %s\n", db.tables[i]->tableName);
-	
-	for(pIndex = db.tables[0]; ; pIndex++)
-	{
-		printf(" - %s\n", pIndex->tableName);
-	}
+		
 }

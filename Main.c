@@ -20,6 +20,16 @@ int main()
 	{
 		switch (option){
 			case 1:
+				if(database != NULL)
+				{
+					printf("# WARNING - The Database %s contains data. Do you want to overwrite them?(y/n)\n", database->dbName);
+					char confirm;
+					scanf("%c*c", &confirm);
+					if(confirm == 'y' || confirm == 'Y')
+						;
+					else
+						continue;
+				}
 				databaseName = malloc(sizeof(char) * NAMES_LENGTH);
 				printf("Please give the name of Database...\n");
 				scanf("%s*s", databaseName);
@@ -28,7 +38,20 @@ int main()
 				database = DatabaseCreation(databaseName, tablesNo);
 				PrintOptionDatabase();
 				break;
-			case 2:
+			case 2:;
+				int check = DatabaseAddTable(database);
+				if(check == 0)	//No error in insert
+				{
+					;
+				}
+				else if(check > 0)
+				{
+					;
+				}
+				else
+				{
+					;
+				}
 				break;
 			case 3:
 				break;

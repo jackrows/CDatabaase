@@ -12,8 +12,9 @@
 
 /*Definition of structure of table*/
 typedef struct Table {
-	char* 	tableName;			/*Store the name of the table*/
-	char***	tableValues;		/*2d dimensional array of strings that simulate the real table of DB*/
+	char* 		tableName;			/*Store the name of the table*/
+	short int	columnCount;		/*Store the number of columns for each table*/
+	char***		tableValues;		/*2d dimensional array of strings that simulate the real table of DB*/
 }Table;
 
 typedef Table* p_Table;			/*Pointer of table structure*/
