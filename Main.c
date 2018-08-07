@@ -55,7 +55,22 @@ int main()
 				break;
 			case 3:
 				break;
-			case 4:
+			case 4:;
+				int searchResult = -1;
+				char* searchName = malloc(sizeof(char) * NAMES_LENGTH);
+				printf("\nPlease give the name of the table to search.\n");
+				scanf("%s*s", searchName);
+				searchResult = DatabaseSearchTable(*database, searchName);
+				if(searchResult == -1)
+				{
+					printf("\n#The search was impossible because the database or the searching name is empty.\n");
+				}
+				else if(searchResult == 1)
+					printf("\n# The table '%s' is found in Database.\n", searchName);
+				else
+					printf("\n# The table '%s' is not found in Database.\n", searchName);
+					
+				PrintOptionDatabase();
 				break;
 			case 5:
 				DatabasePrint(*database);
@@ -65,7 +80,19 @@ int main()
 				PrintOptionTable();
 				PrintOptionDatabase();
 				break;
-			case 7:
+			case 7:;
+				int destroy = DatabaseDestruction(database);
+				if(destroy == 0)
+				{
+					printf("#Unallocate memory... DONE\n");
+					continue;
+				}
+				else
+				{
+					printf("#The unallocated FAILED\n");
+					continue;
+				}
+				PrintOptionDatabase();
 				break;
 			case 8:
 				printf("Exiting from the Database.\n");
@@ -81,11 +108,12 @@ int main()
 	if(ret_scanf == 0)
 	{
 		printf("#The given input was invalid.\n");
+		printf("#The Database and the tables will be erased...\n");
+		DatabaseDestruction(database);
+		printf("#Exiting from the Database.\n");
+		return 1;
 		//Unlaocate the used memory
 	}
-	database->tables[0]->tableValues[0][0] = "Alex";
-	printf("%s  %s\n", database->tables[0]->tableValues[0][0], database->tables[0]->tableValues[0][1]);
-	
 	
 	return 0;
 }

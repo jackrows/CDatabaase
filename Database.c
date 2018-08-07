@@ -67,27 +67,63 @@ int	DatabaseAddTable(p_Database p_db)
 	printf("\tPlease give the number of columns of the table...\n");
 	scanf("%d*d", &columns);
 	p_Table newTable = DBTableCreation(newTableName, columns);
-	p_Table* tempTables = p_db->tables;
+	p_Table* tempTables = malloc(sizeof(p_Table) * (p_db->tablesCount + 1));
 
-	
-	if(tempTables == NULL)
+	if(tempTables == NULL || newTable == NULL)
 		return 1;
 	
-	free(p_db->tables);
-	p_db->tables = malloc(sizeof(p_Table) * p_db->tablesCount + 1);
-	int i;
-	for(i = 0; i < p_db->tablesCount; i++)
+	return 0;
+}
+
+/*Destroy and unallocate the memory of Database and tables*/
+int DatabaseDestruction(p_Database db)
+{
+	if(db == NULL)
+		return -1;
+	
+	int i,j;
+	printf("/n#Free the located memory for tables and Database...\n");
+	
+	for(i = 0; i < db->tablesCount; i++)
 	{
-		p_db->tables[i] = tempTables[i];
+		DBTableDestructor(db->tables[i]);
 	}
-	p_db->tablesCount++;
-	p_db->tables[p_db->tablesCount] = newTable;
+	
+	free(db->dbName);
+	free(db);
+	db->dbName = NULL;
+	db = NULL;
+	db->tablesCount = 0;
+	return 0;
+}
+
+/*Search a table in Database through the name
+* Return -1 in if Database is empty, 1 if the table founded and 0 not founded*/
+int DatabaseSearchTable(Database db, char* searchName)
+{
+	if(db.dbName == NULL || searchName == NULL)
+	{
+		printf("\n# The Database or the searching name is empty.\n");
+		return -1;
+	}
+	
+	int i;
+	for(i = 0; i < db.tablesCount; i++)
+	{
+		if(strcmp(db.tables[i]->tableName, searchName) == 0)
+			return 1;
+	}
 	return 0;
 }
 
 /*Display the name and the table array of Database*/
 void DatabasePrint(Database db)
 {
+	if(db.dbName == NULL)
+	{
+		printf("\n#The Database is empty. Please Create one first\n");
+		return;
+	}
 	printf("\n-----------------------------------------\n");
 	printf("\tSchema Browser of %s\n", db.dbName);
 	printf("-----------------------------------------\n");
