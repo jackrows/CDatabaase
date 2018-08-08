@@ -41,14 +41,14 @@ p_Database DatabaseCreation(char* const dbName, int tablesNumber)
 	for(i = 0; i < tablesNumber; i++)
 	{
 		char *tableName = malloc(sizeof(char) * NAMES_LENGTH);
-		//database->tables[i] = malloc(sizeof(Table));
 		printf("\tPlease give a name for the table...\n");
 		scanf("%s*s", tableName);
 		printf("\tPlease give the number of columns of the table...\n");
 		scanf("%d*d", &colSize);
+		
 		database->tables[i] = DBTableCreation(tableName, colSize);
 	}	
-	database->tables[tablesNumber + 1] = NULL;
+	//database->tables[tablesNumber + 1] = NULL;
 	printf("#Initialization DONE\n");
 	
 	return database;
@@ -81,55 +81,57 @@ int DatabaseDestruction(p_Database db)
 	if(db == NULL)
 		return -1;
 	
-	int i,j;
-	printf("/n#Free the located memory for tables and Database...\n");
+	int i;
+	printf("\n#Free the located memory for tables and Database...\n");
 	
-	for(i = 0; i < db->tablesCount; i++)
+	for(i = 0; i < db->tablesCount; i++)	/*Free the memory for each table*/
 	{
 		DBTableDestructor(db->tables[i]);
 	}
-	
-	free(db->dbName);
-	free(db);
+	free(db->tables);	/*Free the memory of the outer pointer*/
+	free(db->dbName);	/*Free the memory of the database name*/
+	free(db);			/*Free the memory of the whole database*/
+	db->tables = NULL;
 	db->dbName = NULL;
-	db = NULL;
 	db->tablesCount = 0;
+	db = NULL;
+	printf("Free the memory...DONE\n");
 	return 0;
 }
 
 /*Search a table in Database through the name
-* Return -1 in if Database is empty, 1 if the table founded and 0 not founded*/
+* Return -2 in if Database is empty, the possition of the table if the table founded and -1 not founded*/
 int DatabaseSearchTable(Database db, char* searchName)
 {
 	if(db.dbName == NULL || searchName == NULL)
 	{
 		printf("\n# The Database or the searching name is empty.\n");
-		return -1;
+		return -2;
 	}
 	
 	int i;
 	for(i = 0; i < db.tablesCount; i++)
 	{
 		if(strcmp(db.tables[i]->tableName, searchName) == 0)
-			return 1;
+			return i;
 	}
-	return 0;
+	return -1;
 }
 
 /*Display the name and the table array of Database*/
-void DatabasePrint(Database db)
+void DatabasePrint(const p_Database db)
 {
-	if(db.dbName == NULL)
+	if(db == NULL)
 	{
 		printf("\n#The Database is empty. Please Create one first\n");
 		return;
 	}
 	printf("\n-----------------------------------------\n");
-	printf("\tSchema Browser of %s\n", db.dbName);
+	printf("\tSchema Browser of %s\n", db->dbName);
 	printf("-----------------------------------------\n");
 	
 	int i;
-	for(i = 0; i < db.tablesCount; i++)
-		printf(" - %s\n", db.tables[i]->tableName);
+	for(i = 0; i < db->tablesCount; i++)
+		printf(" - %s\n", db->tables[i]->tableName);
 		
 }

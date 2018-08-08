@@ -24,11 +24,15 @@ int main()
 				{
 					printf("# WARNING - The Database %s contains data. Do you want to overwrite them?(y/n)\n", database->dbName);
 					char confirm;
+					while ((getchar()) != '\n');
 					scanf("%c*c", &confirm);
 					if(confirm == 'y' || confirm == 'Y')
 						;
 					else
+					{
+						PrintOptionDatabase();
 						continue;
+					}
 				}
 				databaseName = malloc(sizeof(char) * NAMES_LENGTH);
 				printf("Please give the name of Database...\n");
@@ -61,11 +65,11 @@ int main()
 				printf("\nPlease give the name of the table to search.\n");
 				scanf("%s*s", searchName);
 				searchResult = DatabaseSearchTable(*database, searchName);
-				if(searchResult == -1)
+				if(searchResult == -2)
 				{
 					printf("\n#The search was impossible because the database or the searching name is empty.\n");
 				}
-				else if(searchResult == 1)
+				else if(searchResult >= 0)
 					printf("\n# The table '%s' is found in Database.\n", searchName);
 				else
 					printf("\n# The table '%s' is not found in Database.\n", searchName);
@@ -73,11 +77,107 @@ int main()
 				PrintOptionDatabase();
 				break;
 			case 5:
-				DatabasePrint(*database);
+				DatabasePrint(database);
 				PrintOptionDatabase();
 				break;
 			case 6:
+				printf("\n#Please give the name of tha table you want to insert\n");
+				char tableName[NAMES_LENGTH];
+				scanf("%s*s", tableName);
+				
+				int searchTable = DatabaseSearchTable(*database, tableName);
+				
+				if(searchTable == -2)
+				{
+					printf("\n#The search was failed, because the Database or the name table is empty.\n");
+					PrintOptionDatabase();
+					continue;
+				}
+				else if(searchTable == -1)
+				{
+					printf("\n#The table '%s' doesn't founded in Database. Please make sure you input the name of table right.\n", tableName);
+					PrintOptionDatabase();
+					continue;
+				}
+				
+				printf("\n# You are insert in '%s' table.\n", database->tables[searchTable]->tableName);
 				PrintOptionTable();
+				int optionTable = 0, ret_scanf_table = 0;
+				while((ret_scanf_table = scanf("%d*d", &optionTable)) == 1)
+				{
+					switch(optionTable){
+						case 1:;
+							int insertResult = DBInsertRec(database->tables[searchTable]);
+							if(insertResult == -1)
+							{
+								printf("\n#The table is empty.\n");
+							}
+							else if(insertResult == 0)
+							{
+								printf("\n#There was an error in memory.\n");
+							}
+							else
+							{
+								printf("\n# The insertion complete successful.\n");
+							}
+							PrintOptionTable();
+							break;
+						case 2:
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						case 5:
+							break;
+						case 6:
+							printf("\n# Please give the name of the column that you want to change\n");
+							char cellName[NAMES_LENGTH];
+							scanf("%s*s", cellName);
+							printf("# Please give the number of row, that you want to update(>0)\n");
+							int rowNumber = -1;
+							scanf("%d*d", &rowNumber);
+							if(rowNumber < 0)
+							{
+								printf("\n# You input wrong number for the row.\n");
+								PrintOptionTable();
+								break;
+							}
+							printf("# Please input the new value of the cell\n");
+							char newValue[40];
+							scanf("%s*s", newValue);
+							
+							int updateCell = -1;
+							updateCell = DBTableUpdateCell(database->tables[searchTable], cellName, rowNumber - 1, newValue);
+							
+							if(updateCell == -2)
+							{
+								printf("\n#Update the cell is failed. Please check the values you insert.\n");
+								//break;
+							}
+							else if(updateCell == -1)
+							{
+								printf("\n# Update cell value failed, because the column doesn't founded in table.\n");
+								//break;
+							}
+							else
+							{
+								printf("\n# Update the cell completed successful.\n");
+								PrintOptionTable();
+								continue;
+							}
+							PrintOptionTable();
+							break;
+						case 7:
+							break;
+						default:
+							continue;
+					}
+					if(optionTable == 7)	/*Exit from the loop*/
+					{
+						break;
+					}
+				}
 				PrintOptionDatabase();
 				break;
 			case 7:;
@@ -89,7 +189,7 @@ int main()
 				}
 				else
 				{
-					printf("#The unallocated FAILED\n");
+					printf("#The unallocated of memory FAILED\n");
 					continue;
 				}
 				PrintOptionDatabase();
@@ -101,7 +201,7 @@ int main()
 				printf("Please choose one of the available options\n");
 				continue;
 		}
-		if(option == 7)
+		if(option == 8)
 			break;
 	}
 	
@@ -109,10 +209,21 @@ int main()
 	{
 		printf("#The given input was invalid.\n");
 		printf("#The Database and the tables will be erased...\n");
-		DatabaseDestruction(database);
+		DatabaseDestruction(database);	//Unlaocate the used memory
 		printf("#Exiting from the Database.\n");
 		return 1;
-		//Unlaocate the used memory
+	}
+	
+	if(option == 8)
+	{
+		printf("\n# You have been exit from the database.\n");
+		printf("\n# The data you store in database will be deleted...\n");
+		int descruction = DatabaseDestruction(database);
+		if(descruction != 0)
+		{
+			printf("\n#Immediately exit from the program.\n");
+			return 1;
+		}
 	}
 	
 	return 0;

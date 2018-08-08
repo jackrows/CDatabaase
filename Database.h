@@ -22,6 +22,6 @@ int			DatabaseAddTable(p_Database);						/*Insert a table in the Database*/
 int			DatabaseRemoveTable(p_Database, Table);						/*Remove a table from the Database*/
 int			DatabaseSearchTable(Database, char*);						/*Search for a table by the name in the Database*/
 int			DatabaseDestruction(p_Database);							/*Destroy and free the memory of Database*/
-void		DatabasePrint(Database);									/*Display all the table of Database*/
+void		DatabasePrint(const p_Database);							/*Display all the table of Database*/
 
 #endif
