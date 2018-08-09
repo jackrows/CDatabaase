@@ -25,11 +25,11 @@ typedef Table* p_Table;			/*Pointer of table structure*/
 p_Table 	DBTableCreation(char*, int);				/*Create a table in DB*/
 int			DBInsertRec(p_Table);						/*Insert a line in the table*/
 int			DBRemoveRec(p_Table);						/*Remove a line from the table*/
-int			DBSearchRec(p_Table, char*);						/*Search for a record in the table*/
-char*		DBSelectColumnByName(Table, char*);			/*Select a single column values by column name*/
-char* 		DBSelectColumnByIndex(Table, int);			/*Select a signle column values by column number sequence(zero-based)*/
-Table		DBSelectMultiColsByNames(Table, char*);		/*Select a subtable values by columns names*/
-char*		DBSelectRec(Table, char*);					/*Select a line from the table*/
+int			DBSearchValue(p_Table, char*);					/*Search for a value in the table*/
+void		DBSelectColumnByName(const p_Table);			/*Select a single column values by column name*/
+void 		DBSelectWholeTable(const p_Table);			/*Select a signle column values by column number sequence(zero-based)*/
+Table		DBSelectMultiColsByNames(const p_Table, char*);		/*Select a subtable values by columns names*/
+void		DBSelectRec(const p_Table);					/*Select a line from the table*/
 int			DBTableUpdateCell(p_Table, char*, int, char*);		/*Update a specific cell of the table*/
 void		DBTableDestructor(p_Table);							/*Free the located memory for the table*/
 

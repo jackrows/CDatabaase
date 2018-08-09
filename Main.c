@@ -45,7 +45,12 @@ int main()
 				database = DatabaseCreation(databaseName, tablesNo);	//Create and allocate memory for the Database
 				PrintOptionDatabase();
 				break;
-			case 2:;
+			case 2:
+				if(database == NULL)
+				{
+					printf("\n# Please first create a Database.\n");
+					break;
+				}
 				int check = DatabaseAddTable(database);
 				if(check == 0)	//No error in insert
 				{
@@ -61,8 +66,20 @@ int main()
 				}
 				break;
 			case 3:
+				if(database == NULL)
+				{
+					printf("\n# Please first create a Database.\n");
+					PrintOptionDatabase();
+					break;
+				}
 				break;
-			case 4:;
+			case 4:
+				if(database == NULL)
+				{
+					printf("\n# Please first create a Database.\n");
+					PrintOptionDatabase();
+					break;
+				}
 				int searchResult = -1;		//Keep the result of searching
 				char* searchName = malloc(sizeof(char) * NAMES_LENGTH);		//Create a string to keep the user table name
 				printf("\nPlease give the name of the table to search.\n");
@@ -88,6 +105,12 @@ int main()
 				PrintOptionDatabase();
 				break;
 			case 6:
+				if(database == NULL)
+				{
+					printf("\n# Please first create a Database.\n");
+					PrintOptionDatabase();
+					break;
+				}
 				printf("\n#Please give the name of tha table you want to insert\n");
 				char tableName[NAMES_LENGTH];	//local string to keep the table from user input
 				scanf("%s*s", tableName);
@@ -133,15 +156,34 @@ int main()
 							}
 							PrintOptionTable();
 							break;
-						case 2:;
+						case 2:
+							printf("\n#Removing...\n");
 							int removeResult = DBRemoveRec(database->tables[searchTable]);
+							if(removeResult == -2)
+							{
+								printf("\n# The table '%s' is empty.\n", database->tables[searchTable]->tableName);
+							}
+							else if(removeResult == -1)
+							{
+								printf("\n# The deleted of row failed.\n");
+							}
+							else
+							{
+								printf("\n#Removing...DONE\n");
+							}
 							PrintOptionTable();
 							break;
 						case 3:
+							DBSelectWholeTable(database->tables[searchTable]);
+							PrintOptionTable();
 							break;
 						case 4:
+							DBSelectColumnByName(database->tables[searchTable]);
+							PrintOptionTable();
 							break;
 						case 5:
+							DBSelectRec(database->tables[searchTable]);
+							PrintOptionTable();
 							break;
 						case 6:
 							printf("\n# Please give the name of the column that you want to change\n");
@@ -249,6 +291,7 @@ int main()
 			printf("\n#Exiting from the program.\n");
 			return 1;
 		}
+		printf("\n\n# Exiting from the program\n");
 	}
 	
 	return 0;
