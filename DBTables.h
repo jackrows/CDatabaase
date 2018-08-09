@@ -24,7 +24,7 @@ typedef Table* p_Table;			/*Pointer of table structure*/
 /*Declaration of functions about DB Tables*/
 p_Table 	DBTableCreation(char*, int);				/*Create a table in DB*/
 int			DBInsertRec(p_Table);						/*Insert a line in the table*/
-int			DBRemoveRec(p_Table, char*);						/*Remove a line from the table*/
+int			DBRemoveRec(p_Table);						/*Remove a line from the table*/
 int			DBSearchRec(p_Table, char*);						/*Search for a record in the table*/
 char*		DBSelectColumnByName(Table, char*);			/*Select a single column values by column name*/
 char* 		DBSelectColumnByIndex(Table, int);			/*Select a signle column values by column number sequence(zero-based)*/

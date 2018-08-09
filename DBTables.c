@@ -96,29 +96,31 @@ void DBTableDestructor(p_Table table)
 * Return -2 if one of the arguments is null, -1 if the update failed, and the possition of the column for success*/
 int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 {
-	if(table == NULL || cellName == NULL || newValue == NULL)
+	if(table == NULL || cellName == NULL || newValue == NULL)	//Check tha parameters
 	{
 		printf("\n#The table, or the name of the cell, or the new value is wrong or empty.\n");
 		return -2;
 	}
-	int i, searchCell = -1;
-	for(i = 0; i < table->columnCount; i++)
+	
+	int i, searchCell = -1;		//iterator, keep the possition of willing column
+	
+	for(i = 0; i < table->columnCount; i++)	//iterate the columns
 	{
-		if(strcmp(table->columnNames[i], cellName) == 0)
+		if(strcmp(table->columnNames[i], cellName) == 0)	//if the column that user input founded
 		{
-			searchCell = i;
+			searchCell = i;		//Keep the column position
 			break;
 		}
-		//searchCell = 0;
 	}
 	
-	//int totalRows = (sizeof(table[0]) / sizeof(Table));
+	/*Check if the row number that user input is valid. Must be between 0-table->rowCount.*/
 	if(row > table->rowCount - 1)
 	{
 		printf("\n# You input a row number larger than the total rows of the table.\n");
 		return -2;
 	}
 	
+	/*Handle the case that the input column name doesn't founded in table*/
 	if(searchCell < 0)
 	{
 		printf("\n#The cell is not found in table.Please sure that the cell name is right.\n");
@@ -126,7 +128,7 @@ int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 	}
 	else
 	{
-		strcpy(table->tableValues[row][searchCell], newValue);
+		strcpy(table->tableValues[row][searchCell], newValue);	//copy the value that user input in specific cell
 	}
 	return searchCell;
 }
@@ -135,51 +137,69 @@ int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 * Return -1 if the table is empty, 0 if allocation memory failed and 1 on success*/
 int DBInsertRec(p_Table table)
 {
-	if(table == NULL)
+	if(table == NULL)	//Check if the passed table is empty
 	{
 		return -1;
 	}
-	char newLine[1][table->columnCount][40];
+	
+	while ((getchar()) != '\n');	//Clear the flush of stdin
+	
+	char newRecord[1][table->columnCount][40];	//temp record to store the new values to insert in table
 	int i,j;
-	for(i = 0; i < 1; i++)
+	for(i = 0; i < 1; i++)	//iterate the rows
 	{
 		char cellValue[40];
-		for(j = 0 ; j < table->columnCount; j++)
+		for(j = 0 ; j < table->columnCount; j++)	//iterate the columns
 		{
 			printf("\n#Please give value for column '%s'\n", table->columnNames[j]);
-			scanf("%s*s", cellValue);
-			strcpy(newLine[i][j], cellValue);
+			//fgets(cellValue, 40, stdin);
+			scanf("%[^\n]s", cellValue);
+			while ((getchar()) != '\n');	//Clear the flush of stdin
+			strcpy(newRecord[i][j], cellValue);		//keep the input from user
 		}
 	}
-	if(table->rowCount == 1 && (strcmp(table->tableValues[0][0], "") == 0) && (strcmp(table->tableValues[0][1], "") == 0))
+	/*If is insertion after the creation, where there is already one empty row(record) and update the empty row*/
+	int emptyTable = -1;
+	if(table->rowCount == 1)
 	{
-		for(i = 0; i < table->rowCount; i++)
+		for(j = 0; j < table->columnCount; j++)
 		{
-			for(j = 0; j < table->columnCount; j++)
+			if(strcmp(table->tableValues[0][j], "") != 0)
 			{
-				strcpy(table->tableValues[i][j], newLine[i][j]);
+				emptyTable = 1;
+				break;
 			}
+		}
+	}
+	if(table->rowCount == 1 && emptyTable == 1)
+	{
+		for(j = 0; j < table->columnCount; j++)
+		{
+			strcpy(table->tableValues[i][j], newRecord[i][j]);
 		}
 		return 1;
 	}
-	char*** tempTable = malloc(sizeof(char**) * (table->rowCount + 1));
-	if(tempTable == NULL)
+	
+	char*** tempTable = malloc(sizeof(char**) * (table->rowCount + 1));	//Create temp table object and allocate memory for rows plus 1 of the main table
+	if(tempTable == NULL)	//Check the malloc return
 		return 0;
-	for(i = 0; i < table->rowCount; i++)
+		
+	for(i = 0; i < table->rowCount; i++)	//iterate rows
 	{
-		tempTable[i] = malloc(sizeof(char*) * table->columnCount);
-		for(j = 0; j < table->columnCount; j++)
+		tempTable[i] = malloc(sizeof(char*) * table->columnCount);	//Allocate memory for the columns
+		for(j = 0; j < table->columnCount; j++)	//iterate columns
 		{
-			tempTable[i][j] = malloc(sizeof(char) * 40);
-			strcpy(tempTable[i][j], table->tableValues[i][j]);
+			tempTable[i][j] = malloc(sizeof(char) * 40);		//Allocate memory for the strings
+			strcpy(tempTable[i][j], table->tableValues[i][j]);	//copy cell's values from the main table to the temporaly 
 		}
 	}
-	tempTable[table->rowCount] = malloc(sizeof(char*) * table->columnCount);
-	for(j = 0; j < table->columnCount; j++)
+	tempTable[table->rowCount] = malloc(sizeof(char*) * table->columnCount);	//Allocate memory for the extra row
+	for(j = 0; j < table->columnCount; j++)	//iterate columns
 	{
-		tempTable[table->rowCount][j] = malloc(sizeof(char) * 40);
-		strcpy(tempTable[table->rowCount][j], newLine[0][j]);
+		tempTable[table->rowCount][j] = malloc(sizeof(char) * 40);	//Allocate memory for the strings
+		strcpy(tempTable[table->rowCount][j], newRecord[0][j]);		//copy the values of new Record to the temp table
 	}
+	/*Free memory for the strings, columns and rows of the original table*/
 	for(i = 0; i < table->rowCount; i++)
 	{
 		for(j = 0; j < table->columnCount; j++)
@@ -191,25 +211,22 @@ int DBInsertRec(p_Table table)
 	free(table->tableValues);
 	
 	table->tableValues = NULL;
-	table->rowCount++;
-	table->tableValues = malloc(sizeof(char**) * table->rowCount);
+	table->rowCount++;			//Increase the row's numbers of the main table by one to insert the new record
+	table->tableValues = malloc(sizeof(char**) * table->rowCount);	//Allocate new memory for the rows for the main table with new row number
 	if(table->tableValues == NULL)
 		return 0;
-	for(i = 0; i < table->rowCount; i++)
+		
+	for(i = 0; i < table->rowCount; i++)	//iterate rows
 	{
-		table->tableValues[i] = malloc(sizeof(char*) * table->columnCount);
-		for(j = 0; j < table->columnCount; j++)
+		table->tableValues[i] = malloc(sizeof(char*) * table->columnCount);	//Allocate memory for the columns
+		for(j = 0; j < table->columnCount; j++)		//iterate columns
 		{
-			table->tableValues[i][j] = malloc(sizeof(char) * 40);
-			/*if(i == table->rowCount -1)
-			{
-				strcpy(table->tableValues[i][j], newLine[i][j]);
-				continue;	
-			}*/
-			strcpy(table->tableValues[i][j], tempTable[i][j]);
+			table->tableValues[i][j] = malloc(sizeof(char) * 40);	//Allocate memory for the strings
+			strcpy(table->tableValues[i][j], tempTable[i][j]);		//copy the cell's values of the temp table to main table
 		}
 	}
 	
+	/*Free the allocated memory for the temporaly table*/
 	for(i = 0; i < table->rowCount - 1; i++)
 	{
 		for(j = 0; j < table->columnCount; j++)
@@ -219,5 +236,89 @@ int DBInsertRec(p_Table table)
 		free(tempTable[i]);
 	}
 	free(tempTable);
+	//while ((getchar()) != '\n');	//Clear the flush of stdin
+	return 1;
+}
+
+/*Remove a record from the table
+* */
+int DBRemoveRec(p_Table table)
+{
+	if(table == NULL)
+		return -2;
+		
+	printf("\n# Please give the number of row that you want to delete(>0).\n");
+	int rowToDelete = -1;
+	scanf("%d*d", &rowToDelete);
+	if(rowToDelete <= 0)
+	{
+		printf("\n# You input wrong number. Please verify what row you want to delete.\n");
+		return -1;
+	}
+	if(rowToDelete > table->rowCount)
+	{
+		printf("\n# You input row number larger than the data in the table.\n");
+		return -1;
+	}
+	
+	char*** tempTable = malloc(sizeof(char**) * (table->rowCount - 1));
+	if(tempTable == NULL)
+		return -2;
+	
+	int i,j, checked = 0;
+	for(i = 0; i < table->rowCount - 1; i++)
+	{
+		if(checked == 0)
+			if(i == rowToDelete - 1)	//skip the row that user input
+			{
+				checked = 1;
+				//continue;
+			}
+		tempTable[i] = malloc(sizeof(char*) * table->columnCount);
+		for(j = 0; j < table->columnCount; j++)
+		{
+			tempTable[i][j] = malloc(sizeof(char) * 40);
+			if(checked == 1)
+				strcpy(tempTable[i][j], table->tableValues[i+1][j]);
+			else
+				strcpy(tempTable[i][j], table->tableValues[i][j]);
+		}
+	}
+	
+	/*Free memory for the strings, columns and rows of the original table*/
+	for(i = 0; i < table->rowCount; i++)
+	{
+		for(j = 0; j < table->columnCount; j++)
+		{
+			free(table->tableValues[i][j]);
+		}
+		free(table->tableValues[i]);
+	}
+	free(table->tableValues);
+	
+	table->tableValues = NULL;
+	table->rowCount--;
+	
+	table->tableValues = malloc(sizeof(char**) * table->rowCount);
+	for(i = 0; i < table->rowCount; i++)
+	{
+		table->tableValues[i] = malloc(sizeof(char*) * table->columnCount);
+		for(j = 0; j < table->columnCount; j++)
+		{
+			strcpy(table->tableValues[i][j], tempTable[i][j]);
+		}
+	}
+	
+	/*Free the allocated memory for the temporaly table*/
+	for(i = 0; i < table->rowCount - 1; i++)
+	{
+		for(j = 0; j < table->columnCount; j++)
+		{
+			free(tempTable[i][j]);
+		}
+		free(tempTable[i]);
+	}
+	free(tempTable);
+	while ((getchar()) != '\n');	//Clear the flush of stdin
 	return 1;
 }

@@ -95,7 +95,7 @@ int DatabaseDestruction(p_Database db)
 	db->dbName = NULL;
 	db->tablesCount = 0;
 	db = NULL;
-	printf("Free the memory...DONE\n");
+	printf("#Free the memory...DONE\n");
 	return 0;
 }
 
