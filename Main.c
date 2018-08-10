@@ -186,6 +186,9 @@ int main()
 							PrintOptionTable();
 							break;
 						case 6:
+							PrintOptionTable();
+							break;
+						case 7:
 							printf("\n# Please give the name of the column that you want to change\n");
 							char cellName[NAMES_LENGTH];
 							scanf("%s*s", cellName);
@@ -225,12 +228,10 @@ int main()
 							}
 							PrintOptionTable();
 							break;
-						case 7:
-							break;
 						default:
 							continue;
 					}
-					if(optionTable == 7)	/*Exit from the loop*/
+					if(optionTable == 8)	/*Exit from the loop*/
 					{
 						printf("\n# You exit from the table '%s'.\n", tableName);
 						break;

@@ -128,7 +128,9 @@ int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 	}
 	else
 	{
+		char* oldValue = table->tableValues[row][searchCell];
 		strcpy(table->tableValues[row][searchCell], newValue);	//copy the value that user input in specific cell
+		printf("\n Updated: '%s' -> '%s'\n", oldValue, table->tableValues[row][searchCell]);
 	}
 	return searchCell;
 }
@@ -546,3 +548,46 @@ void DBSelectWholeTable(const p_Table table)
 	}
 	printf("----------------------------------------------------------\n");
 }
+
+/*Display records by applied complex condition
+* */
+void DBSelectRecByComplexCondition(const p_Table table)
+{
+	if(table == NULL || table->rowCount == 0)
+	{
+		printf("\n# The table is emtpy.\n");
+		return;
+	}
+	int i,j;
+	if(table->rowCount == 1)	//Check if the table contains one row and empty strings.
+	{
+		int emptyTable = 1;
+		for(i = 0; i < table->rowCount; i++)
+		{	
+			for(j = 0; j < table->columnCount; j++)
+			{
+				if(strcmp(table->tableValues[i][j], "") != 0)
+				{
+					emptyTable = 0;
+					break;
+				}
+			}
+			if(emptyTable == 0)
+				break;
+		}
+		if(emptyTable == 1)
+		{
+			printf("\n# The table is empty!\n");
+			return;
+		}
+	}
+	
+	//while ((getchar()) != '\n');	//Clear the flush of stdin
+	printf("\n# Please give the names of columns that condition will be applied. Separate them with space\n");
+	char conditionNames[1][table->columnCount];
+	char conditionUser[100];
+	scanf("%[^\n]s", conditionUser);
+}
+
+/*Check if a table is empty or it is used immediately after the creation where contains one row with empty values
+* Return -1 if the table is null, 0 if the table */

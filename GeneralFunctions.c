@@ -28,7 +28,8 @@ void PrintOptionTable()
 	printf(" 3 - Display whole table\n");
 	printf(" 4 - Select a single column\n");
 	printf(" 5 - Select all columns for a record\n");
-	printf(" 6 - Update a single cell\n");
-	printf(" 7 - Finish with the table\n");
+	printf(" 6 - Select records with complex condition\n");
+	printf(" 7 - Update a single cell\n");
+	printf(" 8 - Finish with the table\n");
 	printf("\n");
 }

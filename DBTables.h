@@ -28,9 +28,11 @@ int			DBRemoveRec(p_Table);						/*Remove a line from the table*/
 int			DBSearchValue(p_Table, char*);					/*Search for a value in the table*/
 void		DBSelectColumnByName(const p_Table);			/*Select a single column values by column name*/
 void 		DBSelectWholeTable(const p_Table);			/*Select a signle column values by column number sequence(zero-based)*/
-Table		DBSelectMultiColsByNames(const p_Table, char*);		/*Select a subtable values by columns names*/
+void		DBSelectRecByComplexCondition(const p_Table);		/*Select a subtable values by columns names*/
 void		DBSelectRec(const p_Table);					/*Select a line from the table*/
 int			DBTableUpdateCell(p_Table, char*, int, char*);		/*Update a specific cell of the table*/
 void		DBTableDestructor(p_Table);							/*Free the located memory for the table*/
+
+int			TableEmpty(const p_Table);							/*Check if a table is empty or use it immediately after the creation*/
 
 #endif
