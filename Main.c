@@ -186,6 +186,7 @@ int main()
 							PrintOptionTable();
 							break;
 						case 6:
+							DBSelectRecByComplexCondition(database->tables[searchTable]);
 							PrintOptionTable();
 							break;
 						case 7:
@@ -228,8 +229,18 @@ int main()
 							}
 							PrintOptionTable();
 							break;
+						case 8:
+							break;
 						default:
 							continue;
+					}
+					
+					if(ret_scanf_table  == 0)
+					{
+						while ((getchar()) != '\n');	//Clear the flush of stdin
+						printf("\n# The input was invalid.\n");
+						printf("# You will be exit from the table '%s'.\n", tableName);
+						break;
 					}
 					if(optionTable == 8)	/*Exit from the loop*/
 					{

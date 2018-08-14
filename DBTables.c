@@ -128,9 +128,10 @@ int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 	}
 	else
 	{
-		char* oldValue = table->tableValues[row][searchCell];
+		//char* oldValue;
+		printf("\n Updated: '%s' -> '%s'\n", table->tableValues[row][searchCell], newValue);
 		strcpy(table->tableValues[row][searchCell], newValue);	//copy the value that user input in specific cell
-		printf("\n Updated: '%s' -> '%s'\n", oldValue, table->tableValues[row][searchCell]);
+		//printf("\n Updated: '%s' -> '%s'\n", oldValue, table->tableValues[row][searchCell]);
 	}
 	return searchCell;
 }
@@ -139,10 +140,21 @@ int DBTableUpdateCell(p_Table table, char* cellName, int row, char* newValue)
 * Return -1 if the table is empty, 0 if allocation memory failed and 1 on success*/
 int DBInsertRec(p_Table table)
 {
-	if(table == NULL)	//Check if the passed table is empty
+	/*if(table == NULL)	//Check if the passed table is empty
 	{
 		return -1;
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		//printf("\n# The table is empty and possible not created.\n");
+		return -1;
 	}
+	//else if(emptyTable == 1)
+	//{
+		//printf("\n# The table '%s' is empty.\n", table->tableName);
+	//	return -1;
+	//}
 	
 	while ((getchar()) != '\n');	//Clear the flush of stdin
 	
@@ -161,7 +173,7 @@ int DBInsertRec(p_Table table)
 		}
 	}
 	/*If is insertion after the creation, where there is already one empty row(record) and update the empty row*/
-	int emptyTable = 1;
+	/*int emptyTable = 1;
 	if(table->rowCount == 1)
 	{
 		for(j = 0; j < table->columnCount; j++)
@@ -172,7 +184,7 @@ int DBInsertRec(p_Table table)
 				break;
 			}
 		}
-	}
+	}*/
 	if(table->rowCount == 1 && emptyTable == 1)
 	{
 		for(j = 0; j < table->columnCount; j++)
@@ -246,7 +258,7 @@ int DBInsertRec(p_Table table)
 * */
 int DBRemoveRec(p_Table table)
 {
-	if(table == NULL || table->rowCount == 0)
+	/*if(table == NULL || table->rowCount == 0)
 		return -2;
 		
 	int i,j;
@@ -271,7 +283,20 @@ int DBRemoveRec(p_Table table)
 			//printf("\n# The table is empty!\n");
 			return -2;
 		}
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		//printf("\n# The table is empty and possible not created.\n");
+		return -2;
 	}
+	/*else if(emptyTable == 1)
+	{
+		printf("\n# The table '%s' is empty.\n", table->tableName);
+		return -1;
+	}*/
+	
+	int i,j;
 	
 	printf("\n# Please give the number of row that you want to delete(>0).\n");
 	int rowToDelete = -1;
@@ -354,7 +379,7 @@ int DBRemoveRec(p_Table table)
 * Display the column by all records. All possible errors handle inside the function*/
 void DBSelectColumnByName(const p_Table table)
 {
-	if(table == NULL || table->rowCount == 0)
+	/*if(table == NULL || table->rowCount == 0)
 	{
 		printf("\n# The table is empty!\n");
 		return;
@@ -380,6 +405,17 @@ void DBSelectColumnByName(const p_Table table)
 			printf("\n# The table is empty!\n");
 			return;
 		}
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		printf("\n# The table is empty and possible not created.\n");
+		return;
+	}
+	else if(emptyTable == 1)
+	{
+		printf("\n# The table '%s' is empty.\n", table->tableName);
+		return;
 	}
 	
 	printf("\n# Please give the name of the column.\n");
@@ -417,7 +453,7 @@ void DBSelectColumnByName(const p_Table table)
 * Display all columns of the row. All errors handling inside the function*/
 void DBSelectRec(const p_Table table)
 {
-	if(table == NULL || table->rowCount == 0)
+	/*if(table == NULL || table->rowCount == 0)
 	{
 		printf("\n# The table is empty!\n");
 		return;
@@ -443,7 +479,18 @@ void DBSelectRec(const p_Table table)
 			printf("\n# The table is empty!\n");
 			return;
 		}
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		printf("\n# The table is empty and possible not created.\n");
+		return;
 	}
+	else if(emptyTable == 1)
+	{
+		printf("\n# The table '%s' is empty.\n", table->tableName);
+		return;
+	}	
 		
 	printf("\n# Please give the name of column to apply the condition.\n");
 	char columnName[NAMES_LENGTH];
@@ -502,7 +549,7 @@ void DBSelectRec(const p_Table table)
 * */
 void DBSelectWholeTable(const p_Table table)
 {
-	if(table == NULL)
+	/*if(table == NULL)
 	{
 		printf("\n# The table is empty!\n");
 		return;
@@ -530,8 +577,20 @@ void DBSelectWholeTable(const p_Table table)
 			printf("\n# The table is empty!\n");
 			return;
 		}
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		printf("\n# The table is empty and possible not created.\n");
+		return;
+	}
+	else if(emptyTable == 1)
+	{
+		printf("\n# The table '%s' is empty.\n", table->tableName);
+		return;
 	}
 	
+	int i,j;
 	printf("\n----------------------------------------------------------\n");
 	for(i = 0; i < table->columnCount; i++)
 		printf("| %s |", table->columnNames[i]);
@@ -553,7 +612,7 @@ void DBSelectWholeTable(const p_Table table)
 * */
 void DBSelectRecByComplexCondition(const p_Table table)
 {
-	if(table == NULL || table->rowCount == 0)
+	/*if(table == NULL || table->rowCount == 0)
 	{
 		printf("\n# The table is emtpy.\n");
 		return;
@@ -580,14 +639,166 @@ void DBSelectRecByComplexCondition(const p_Table table)
 			printf("\n# The table is empty!\n");
 			return;
 		}
+	}*/
+	int emptyTable = TableEmpty(table);
+	if(emptyTable == -1)
+	{
+		printf("\n# The table is empty and possible not created.\n");
+		return;
+	}
+	else if(emptyTable == 1)
+	{
+		printf("\n# The table '%s' is empty.\n", table->tableName);
+		return;
+	}
+	
+	int i,j;
+	
+	char conditionValue[1][table->columnCount][40];
+	char conditionNames[1][table->columnCount][40];
+	for(i = 0; i < table->columnCount; i++)
+	{
+		while ((getchar()) != '\n');	//Clear the flush of stdin
+		printf("\n# Please give the name of column that condition will be applied. To finished with the conditions press enter\n");
+		scanf("%[^\n]s", conditionNames[0][i]);
+		if(strcmp(conditionNames[0][i], "") == 0 || strcmp(conditionNames[0][i], "\n") == 0 || conditionNames[0][i] == NULL)
+			break;
+		while ((getchar()) != '\n');	//Clear the flush of stdin
+		printf("\n# Please give the willing value to check for the column '%s'.\n", conditionNames[0][i]);
+		scanf("%[^\n]s", conditionValue[0][i]);
 	}
 	
 	//while ((getchar()) != '\n');	//Clear the flush of stdin
-	printf("\n# Please give the names of columns that condition will be applied. Separate them with space\n");
-	char conditionNames[1][table->columnCount];
-	char conditionUser[100];
-	scanf("%[^\n]s", conditionUser);
+	int conditionCount = i;
+	int findColumns[conditionCount];
+	for(i = 0; i < conditionCount; i++)
+	{
+		findColumns[i] = -1;
+		int j;
+		for(j = 0; j < table->columnCount; j++)
+		{
+			if(strcmp(conditionNames[0][i], table->columnNames[j]) == 0)
+			{
+				findColumns[i] = j;
+				break;
+			}
+		}
+	}
+	int allColumnConditionCheck = 1;
+	for(i = 0; i < conditionCount; i++)
+	{
+		if(findColumns[i] == -1)
+		{
+			allColumnConditionCheck = 0;
+			break;
+		}
+	}
+	if(allColumnConditionCheck == 0)
+	{
+		printf("\n# Doesn't founded all the columns you input. The conditions will applied for the existed columns.\n");
+	}
+	
+	int findConditions[conditionCount];
+	for(i = 0; i < conditionCount; i++)
+	{
+		findConditions[i] = -1;
+		if(findColumns[i] == -1)
+			continue;
+		
+		int j;
+		for(j = 0; j < table->rowCount; j++)
+		{
+			if(strcmp(table->tableValues[j][findColumns[i]], conditionValue[0][i]) == 0)
+			{
+				findConditions[i] = j;
+				break;
+			}
+		}
+	}
+	
+	for(i = 0; i < table->rowCount; i++)
+	{
+		int j;
+		for(j = 0; j < conditionCount; j++)
+		{
+			findConditions[j] = -1;
+			if(findColumns[j] == -1)
+				continue;
+			if(strcmp(table->tableValues[i][j], conditionValue[0][j]) == 0)
+			{
+				findConditions[j] = j;
+			}
+		}
+	}
+	
+	int allValueConditionCheck = 1;
+	for(i = 0; i < conditionCount; i++)
+	{
+		if(findConditions[i] == -1)
+		{
+			allValueConditionCheck = 0;
+			break;
+		}
+	}
+	if(allValueConditionCheck == 0)
+	{
+		printf("\n# Not all values for the existes columns found. The condition will be applied for the founded values.\n");
+	}
+	
+	printf("\n----------------------------------------------------\n");
+	for(i = 0; i < table->columnCount; i++)
+	{
+		printf("| %s |", table->columnNames[i]);
+	}
+	printf("\n");
+	for(i = 0; i <table->columnCount; i++)
+	{
+		if(findColumns[i] != -1 && findConditions[i] != -1)
+		{
+			printf("| %s |", table->tableValues[findConditions[i]][findColumns[i]]);
+		}
+	}
+	printf("\n----------------------------------------------------\n");
+	
+	return;
 }
 
 /*Check if a table is empty or it is used immediately after the creation where contains one row with empty values
-* Return -1 if the table is null, 0 if the table */
+* Return -1 if the table is null, 0 if the table is NOT empty and 1 if the table is empty*/
+int TableEmpty(const p_Table table)
+{
+	if(table == NULL)	//If table is null or created but without rows
+	{
+		//printf("\n# The table is not created.\n");
+		return -1;
+	}
+	int i,j;
+	if(table->rowCount == 0)
+	{
+		//printf("\n# The table is empty.\n");
+		return 1;
+	}
+	else if(table->rowCount == 1)	//Check if the table contains one row and empty strings.
+	{
+		int emptyTable = 1;
+		for(i = 0; i < table->rowCount; i++)
+		{	
+			for(j = 0; j < table->columnCount; j++)
+			{
+				if(strcmp(table->tableValues[i][j], "") != 0)
+				{
+					emptyTable = 0;
+					break;
+				}
+			}
+			if(emptyTable == 0)
+				break;
+		}
+		if(emptyTable == 1)
+		{
+			//printf("\n# The table is empty!\n");
+			return 1;
+		}
+	}
+	return 0;
+}
