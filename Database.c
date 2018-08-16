@@ -60,18 +60,47 @@ int	DatabaseAddTable(p_Database p_db)
 {
 	if(p_db == NULL)
 		return -1;
+		
 	int 	columns = 0;
 	char* 	newTableName = malloc(sizeof(char) * NAMES_LENGTH);
-	printf("\tPlease give a name for the table...\n");
+	printf("\tPlease give a name for the new table...\n");
 	scanf("%s*s", newTableName);
 	printf("\tPlease give the number of columns of the table...\n");
 	scanf("%d*d", &columns);
+	
 	p_Table newTable = DBTableCreation(newTableName, columns);
 	p_Table* tempTables = malloc(sizeof(p_Table) * (p_db->tablesCount + 1));
 
 	if(tempTables == NULL || newTable == NULL)
 		return 1;
 	
+	int i;
+	//Allocate necessary memory for the temp table
+	
+	//Copy the table of database to temporaliry
+	
+	
+	for(i = 0; i < p_db->tablesCount; i++)
+	{
+		DBTableDestructor(p_db->tables[i]);
+	}
+	free(p_db->tables);
+	p_db->tables = NULL;
+	
+	p_db->tablesCount++;
+	p_db->tables = malloc(sizeof(p_Table) * p_db->tablesCount);
+	if(p_db->tables == NULL)
+	{
+		printf("\n# ERROR in creation extra space for the new table.\n");
+		return 1;
+	}
+	for(i = 0; i < p_db->tablesCount; i++)
+	{
+		p_db->tables[i] = DBTableCreation()
+	}
+	
+	free(newTableName);
+
 	return 0;
 }
 

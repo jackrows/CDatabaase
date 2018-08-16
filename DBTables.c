@@ -654,30 +654,30 @@ void DBSelectRecByComplexCondition(const p_Table table)
 	
 	int i,j;
 	
-	char conditionValue[1][table->columnCount][40];
-	char conditionNames[1][table->columnCount][40];
+	char conditionValue[table->columnCount][40];
+	char conditionNames[table->columnCount][NAMES_LENGTH];
 	for(i = 0; i < table->columnCount; i++)
 	{
 		while ((getchar()) != '\n');	//Clear the flush of stdin
 		printf("\n# Please give the name of column that condition will be applied. To finished with the conditions press enter\n");
-		scanf("%[^\n]s", conditionNames[0][i]);
-		if(strcmp(conditionNames[0][i], "") == 0 || strcmp(conditionNames[0][i], "\n") == 0 || conditionNames[0][i] == NULL)
+		scanf("%[^\n]s", conditionNames[i]);
+		if(strcmp(conditionNames[i], "") == 0 || strcmp(conditionNames[i], "\n") == 0 || conditionNames[i] == NULL)
 			break;
 		while ((getchar()) != '\n');	//Clear the flush of stdin
-		printf("\n# Please give the willing value to check for the column '%s'.\n", conditionNames[0][i]);
-		scanf("%[^\n]s", conditionValue[0][i]);
+		printf("\n# Please give the willing value to check for the column '%s'.\n", conditionNames[i]);
+		scanf("%[^\n]s", conditionValue[i]);
 	}
 	
-	//while ((getchar()) != '\n');	//Clear the flush of stdin
+	while ((getchar()) != '\n');	//Clear the flush of stdin
 	int conditionCount = i;
 	int findColumns[conditionCount];
 	for(i = 0; i < conditionCount; i++)
 	{
 		findColumns[i] = -1;
-		int j;
+		//int j;
 		for(j = 0; j < table->columnCount; j++)
 		{
-			if(strcmp(conditionNames[0][i], table->columnNames[j]) == 0)
+			if(strcmp(conditionNames[i], table->columnNames[j]) == 0)
 			{
 				findColumns[i] = j;
 				break;
@@ -699,37 +699,42 @@ void DBSelectRecByComplexCondition(const p_Table table)
 	}
 	
 	int findConditions[conditionCount];
+	int row = -1;
 	for(i = 0; i < conditionCount; i++)
 	{
 		findConditions[i] = -1;
 		if(findColumns[i] == -1)
 			continue;
 		
-		int j;
+		//int j;
 		for(j = 0; j < table->rowCount; j++)
 		{
-			if(strcmp(table->tableValues[j][findColumns[i]], conditionValue[0][i]) == 0)
+			if(row != j)
+				continue;
+				
+			if(strcmp(table->tableValues[j][findColumns[i]], conditionValue[i]) == 0)
 			{
 				findConditions[i] = j;
+				row = j;
 				break;
 			}
 		}
 	}
 	
-	for(i = 0; i < table->rowCount; i++)
+	/*for(i = 0; i < table->rowCount; i++)
 	{
-		int j;
+		//int j;
 		for(j = 0; j < conditionCount; j++)
 		{
 			findConditions[j] = -1;
 			if(findColumns[j] == -1)
 				continue;
-			if(strcmp(table->tableValues[i][j], conditionValue[0][j]) == 0)
+			if(strcmp(table->tableValues[i][j], conditionValue[j]) == 0)
 			{
 				findConditions[j] = j;
 			}
 		}
-	}
+	}*/
 	
 	int allValueConditionCheck = 1;
 	for(i = 0; i < conditionCount; i++)

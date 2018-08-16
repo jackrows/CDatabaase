@@ -64,6 +64,7 @@ int main()
 				{
 					;
 				}
+				PrintOptionDatabase();
 				break;
 			case 3:
 				if(database == NULL)
@@ -72,6 +73,7 @@ int main()
 					PrintOptionDatabase();
 					break;
 				}
+				PrintOptionDatabase();
 				break;
 			case 4:
 				if(database == NULL)
