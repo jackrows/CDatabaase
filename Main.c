@@ -44,25 +44,28 @@ int main()
 				
 				database = DatabaseCreation(databaseName, tablesNo);	//Create and allocate memory for the Database
 				PrintOptionDatabase();
+				free(databaseName);
+				databaseName = NULL;
 				break;
 			case 2:
 				if(database == NULL)
 				{
 					printf("\n# Please first create a Database.\n");
+					PrintOptionDatabase();
 					break;
 				}
 				int check = DatabaseAddTable(database);
 				if(check == 0)	//No error in insert
 				{
-					;
+					printf("\n# The new table '%s' added successful.\n", database->tables[database->tablesCount-1]->tableName);
 				}
 				else if(check > 0)
 				{
-					;
+					printf("\n# Insert the new table failed.\n");
 				}
 				else
 				{
-					;
+					printf("\n#There is an error with Database.\n");
 				}
 				PrintOptionDatabase();
 				break;

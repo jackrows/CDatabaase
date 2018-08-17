@@ -61,46 +61,74 @@ int	DatabaseAddTable(p_Database p_db)
 	if(p_db == NULL)
 		return -1;
 		
-	int 	columns = 0;
-	char* 	newTableName = malloc(sizeof(char) * NAMES_LENGTH);
-	printf("\tPlease give a name for the new table...\n");
-	scanf("%s*s", newTableName);
-	printf("\tPlease give the number of columns of the table...\n");
-	scanf("%d*d", &columns);
+	int 	columns = 0;		//Store the columns number of user input
+	char* 	newTableName = malloc(sizeof(char) * NAMES_LENGTH);		//Store the table name of user input
 	
-	p_Table newTable = DBTableCreation(newTableName, columns);
-	p_Table* tempTables = malloc(sizeof(p_Table) * (p_db->tablesCount + 1));
+	p_Table* tempTables = malloc(sizeof(p_Table) * p_db->tablesCount);	//Temporaliry array of tables to keep the original
 
-	if(tempTables == NULL || newTable == NULL)
+	if(tempTables == NULL)	/*Check the temporaliry array*/
 		return 1;
 	
 	int i;
-	//Allocate necessary memory for the temp table
-	
+	printf("\n------------------------------------------------------");
+	printf("\n# Adding new table...\n");
 	//Copy the table of database to temporaliry
-	
-	
 	for(i = 0; i < p_db->tablesCount; i++)
 	{
-		DBTableDestructor(p_db->tables[i]);
+		tempTables[i] = malloc(sizeof(Table));
+		tempTables[i]->columnCount = p_db->tables[i]->columnCount;
+		tempTables[i]->columnNames = malloc(sizeof(char*) * tempTables[i]->columnCount);
+		int j;
+		for(j = 0; j < tempTables[i]->columnCount; j++)
+		{
+			tempTables[i]->columnNames[j] = malloc(sizeof(char) * NAMES_LENGTH);
+			strcpy(tempTables[i]->columnNames[j], p_db->tables[i]->columnNames[j]);
+		}
+		
+		tempTables[i]->tableName = malloc(sizeof(char) * NAMES_LENGTH);
+		strcpy(tempTables[i]->tableName, p_db->tables[i]->tableName);
+		
+		tempTables[i]->rowCount = p_db->tables[i]->rowCount;
+		
+		tempTables[i]->tableValues = malloc(sizeof(char**) * tempTables[i]->rowCount);
+		for(j = 0; j < tempTables[i]->rowCount; j++)
+		{
+			tempTables[i]->tableValues[j] = malloc(sizeof(char*) * tempTables[i]->columnCount);
+			int k;
+			for(k = 0; k < tempTables[i]->columnCount; k++)
+			{
+				tempTables[i]->tableValues[j][k] = malloc(sizeof(char) * 40);
+				strcpy(tempTables[i]->tableValues[j][k], p_db->tables[i]->tableValues[j][k]);
+			}
+		}
 	}
-	free(p_db->tables);
-	p_db->tables = NULL;
-	
+	//Allocate necessary memory for the temp table
 	p_db->tablesCount++;
-	p_db->tables = malloc(sizeof(p_Table) * p_db->tablesCount);
+	p_db->tables = realloc(p_db->tables, p_db->tablesCount);
 	if(p_db->tables == NULL)
 	{
-		printf("\n# ERROR in creation extra space for the new table.\n");
+		printf("\n# Realloc failed.\n");
 		return 1;
 	}
+	//p_db->tables[p_db->tablesCount - 1] = DBTableCreation(newTableName, columns);
+	//Copy from the temp table array to database array
 	for(i = 0; i < p_db->tablesCount; i++)
 	{
-		p_db->tables[i] = DBTableCreation()
+		if(i == p_db->tablesCount - 1)
+		{
+			printf("\tPlease give a name for the new table...\n");
+			scanf("%s*s", newTableName);
+			printf("\tPlease give the number of columns of the table...\n");
+			scanf("%d*d", &columns);
+			p_db->tables[i] = DBTableCreation(newTableName, columns);
+			break;
+		}
+		p_db->tables[i] = tempTables[i];
 	}
-	
-	free(newTableName);
-
+	printf("\n# Adding new table...DONE\n");
+	//for(i = 0; i < p_db->tablesCount - 1; i++)
+	//	DBTableDestructor(tempTables[i]);
+	printf("------------------------------------------------------\n");
 	return 0;
 }
 
